@@ -8,10 +8,18 @@ defmodule GenStageExample.ProducerConsumer do
     def handle_events(urls, _from, _state) do
         statuses = urls
         |> Stream.map(fn(url) ->
-            IO.puts "getting url: " <> url
-            url |> HTTPotion.get |> HTTPotion.Response.success?
+            status = url |> HTTPotion.get |> status_code
+            %{ :website => url, :status => status }
         end)
 
-        {:noreply, statuses, :ok}
+        {:noreply, statuses |> Enum.to_list, :ok}
+    end
+
+    defp status_code(response) do
+        case response do
+            %HTTPotion.Response{body: _, headers: _, status_code: status_code} ->
+                status_code
+            _ -> 500
+        end
     end
 end

@@ -10,7 +10,7 @@ defmodule GenStageExample.Producer do
         |> case do
             {:ok, file_device} ->
                 urls = file_device |> IO.stream(:line) |> fetch_lines(line, line+demand)
-                {:noreply, urls, line+demand+1}
+                {:noreply, urls, line + demand + 1}
             {:error, reason} ->
                 IO.puts "Could not open file"
                 {:noreply, [], line}
@@ -23,7 +23,7 @@ defmodule GenStageExample.Producer do
         |> Stream.filter_map(fn ({_, index}) -> 
             index >= start_line && index < end_line
         end, fn ({line, _}) -> 
-            line 
+            line |> String.trim("\n")
         end)
         |> Enum.to_list
     end
