@@ -13,6 +13,7 @@ defmodule GenStageExample.Producer do
                 {:noreply, urls, line + demand + 1}
             {:error, reason} ->
                 IO.puts "Could not open file"
+                IO.inspect reason
                 {:noreply, [], line}
         end
     end
